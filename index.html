@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory and CPU Intensive Page</title>
+    <title>Nightmare Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
     </style>
     <script>
@@ -14,36 +15,74 @@
         function createMemoryIntensivePage() {
             const container = document.getElementById("container");
 
-            // Create a large number of divs with random text
-            for (let i = 0; i < 1000000000; i++) {
+            // Create a massive number of divs with random text
+            for (let i = 0; i < 100000; i++) {
                 const newDiv = document.createElement("div");
                 newDiv.textContent = "Memory consuming element #" + i;
                 container.appendChild(newDiv);
             }
         }
 
-        // Function to consume CPU by running an intense loop
-        function createCPUIntensiveTask() {
-            const startTime = Date.now();
-            // Run an infinite loop that consumes CPU
-            while (Date.now() - startTime < 5000) {
-                // Intensive task: a CPU-bound calculation (this loop will run for 5 seconds)
-                Math.sqrt(Math.random() * Math.random() * 100000000);
+        // Function to create CPU-intensive tasks with recursive calls
+        function cpuIntensiveTask() {
+            let randomValue = Math.random();
+            // Create recursive calls that consume the call stack
+            function recurse(depth) {
+                if (depth > 500) return; // Stop after a certain depth
+                randomValue += Math.random();
+                recurse(depth + 1);
             }
-            // After the 5-second loop, restart the CPU task
-            setTimeout(createCPUIntensiveTask, 0);  // Repeat it to keep using the CPU
+            recurse(0); // Call the recursive function
+
+            // Perform a CPU-heavy calculation
+            for (let i = 0; i < 1000000; i++) {
+                Math.sqrt(Math.random() * Math.random() * 1000000);
+            }
         }
 
-        // Run both functions when the page is loaded
+        // Function to repeatedly cause reflows and layout recalculations
+        function triggerReflows() {
+            const container = document.getElementById("container");
+            for (let i = 0; i < 100000; i++) {
+                // Changing styles and causing reflows (recalculating layout)
+                container.style.marginTop = `${Math.random() * 100}px`;
+                container.style.marginLeft = `${Math.random() * 100}px`;
+                // Triggering forced reflow
+                container.offsetHeight;
+            }
+        }
+
+        // Function to add chaotic random animations
+        function randomAnimations() {
+            const elements = document.querySelectorAll('div');
+            elements.forEach(el => {
+                // Randomize position and animation
+                el.style.position = 'absolute';
+                el.style.top = `${Math.random() * window.innerHeight}px`;
+                el.style.left = `${Math.random() * window.innerWidth}px`;
+                el.style.transition = `all ${Math.random() * 5 + 1}s ease-in-out`;
+                el.style.transform = `rotate(${Math.random() * 360}deg)`;
+            });
+        }
+
+        // Function to create intense CPU load and memory consumption
+        function createNightmare() {
+            createMemoryIntensivePage(); // Memory-consuming page
+            cpuIntensiveTask(); // CPU-bound task
+            triggerReflows(); // Layout recalculations and reflows
+            randomAnimations(); // Chaotic movement of elements
+            setTimeout(createNightmare, 100); // Re-run everything every 100ms
+        }
+
+        // Start the nightmare when the page is loaded
         window.onload = function() {
-            createMemoryIntensivePage();
-            createCPUIntensiveTask();
+            createNightmare(); // Start the chaos
         };
     </script>
 </head>
 <body>
-    <h1>Memory and CPU Intensive Page</h1>
-    <p>This page is designed to use a lot of memory and CPU power.</p>
+    <h1>Nightmare Page</h1>
+    <p>This page will crash your browser with memory and CPU-intensive tasks, reflows, and chaos!</p>
     <div id="container"></div>
 </body>
 </html>
