@@ -3,32 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arts For Kids</title>
+    <title>Memory and CPU Intensive Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
     </style>
     <script>
-        // Function to create a large number of elements
+        // Function to create a large number of elements to consume memory
         function createMemoryIntensivePage() {
             const container = document.getElementById("container");
 
             // Create a large number of divs with random text
-            for (let i = 0; i < 10000000000000; i++) {
+            for (let i = 0; i < 1000000000; i++) {
                 const newDiv = document.createElement("div");
                 newDiv.textContent = "Memory consuming element #" + i;
                 container.appendChild(newDiv);
             }
         }
 
-        // Run the function when the page is loaded
-        window.onload = createMemoryIntensivePage;
+        // Function to consume CPU by running an intense loop
+        function createCPUIntensiveTask() {
+            const startTime = Date.now();
+            // Run an infinite loop that consumes CPU
+            while (Date.now() - startTime < 5000) {
+                // Intensive task: a CPU-bound calculation (this loop will run for 5 seconds)
+                Math.sqrt(Math.random() * Math.random() * 100000000);
+            }
+            // After the 5-second loop, restart the CPU task
+            setTimeout(createCPUIntensiveTask, 0);  // Repeat it to keep using the CPU
+        }
+
+        // Run both functions when the page is loaded
+        window.onload = function() {
+            createMemoryIntensivePage();
+            createCPUIntensiveTask();
+        };
     </script>
 </head>
 <body>
-    <h1>Memory Intensive Page</h1>
-    <p>This page is designed to use a lot of memory by creating a large number of DOM elements.</p>
+    <h1>Memory and CPU Intensive Page</h1>
+    <p>This page is designed to use a lot of memory and CPU power.</p>
     <div id="container"></div>
 </body>
 </html>
